@@ -1,12 +1,12 @@
 /*
- * @Author: taijingming 
+ * @Author: taijingming
  * @Date: 2025-06-28 14:28:05
  * @LastEditors: taijingming
  * @LastEditTime: 2025-06-28 15:00:34
  * @FilePath: \vue-test\vue-learning\src\router\index.ts
- * @Description: 
- * 
- * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
@@ -37,6 +37,11 @@ const router = createRouter({
       path: '/learning/reactivity',
       name: 'reactivity',
       component: () => import('../views/learning/ReactivityView.vue'),
+    },
+    {
+      path: '/learning/reactivity/implementation/:api',
+      name: 'reactivity-implementation',
+      component: () => import('../views/learning/ReactivityImplementationView.vue'),
     },
     {
       path: '/learning/components',

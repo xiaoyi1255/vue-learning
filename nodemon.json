@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "src/learning/reactivity/effect.ts"
+  ],
+  "ext": "ts",
+  "ignore": [
+    "src/**/*.test.ts"
+  ],
+  "exec": "npx ts-node --esm src/tests/reactivity/effect.test.ts",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

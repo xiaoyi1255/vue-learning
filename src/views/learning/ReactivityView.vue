@@ -11,7 +11,7 @@
         <div class="concept-card">
           <h3>什么是响应式？</h3>
           <p>响应式是指当数据发生变化时，相关的视图会自动更新。Vue3使用Proxy来实现响应式系统。</p>
-          
+
           <div class="code-example">
             <h4>基本示例：</h4>
             <pre><code>// 原始对象
@@ -34,17 +34,26 @@ reactive.count++ // 触发更新</code></pre>
             <div class="api-item">
               <h4>reactive()</h4>
               <p>创建响应式对象</p>
-              <button @click="testOfficialReactive" class="test-btn">测试</button>
+              <div class="button-group">
+                <button @click="testOfficialReactive" class="test-btn">测试</button>
+                <button @click="goToImplementation('reactive')" class="implement-btn">实现</button>
+              </div>
             </div>
             <div class="api-item">
               <h4>ref()</h4>
               <p>创建响应式引用</p>
-              <button @click="testOfficialRef" class="test-btn">测试</button>
+              <div class="button-group">
+                <button @click="testOfficialRef" class="test-btn">测试</button>
+                <button @click="goToImplementation('ref')" class="implement-btn">实现</button>
+              </div>
             </div>
             <div class="api-item">
               <h4>computed()</h4>
               <p>创建计算属性</p>
-              <button @click="testOfficialComputed" class="test-btn">测试</button>
+              <div class="button-group">
+                <button @click="testOfficialComputed" class="test-btn">测试</button>
+                <button @click="goToImplementation('computed')" class="implement-btn">实现</button>
+              </div>
             </div>
           </div>
 
@@ -53,17 +62,26 @@ reactive.count++ // 触发更新</code></pre>
             <div class="api-item">
               <h4>reactive()</h4>
               <p>创建响应式对象</p>
-              <button @click="testMyReactive" class="test-btn my">测试</button>
+              <div class="button-group">
+                <button @click="testMyReactive" class="test-btn my">测试</button>
+                <button @click="goToImplementation('reactive')" class="implement-btn">实现</button>
+              </div>
             </div>
             <div class="api-item">
               <h4>ref()</h4>
               <p>创建响应式引用</p>
-              <button @click="testMyRef" class="test-btn my">测试</button>
+              <div class="button-group">
+                <button @click="testMyRef" class="test-btn my">测试</button>
+                <button @click="goToImplementation('ref')" class="implement-btn">实现</button>
+              </div>
             </div>
             <div class="api-item">
               <h4>computed()</h4>
               <p>创建计算属性</p>
-              <button @click="testMyComputed" class="test-btn my">测试</button>
+              <div class="button-group">
+                <button @click="testMyComputed" class="test-btn my">测试</button>
+                <button @click="goToImplementation('computed')" class="implement-btn">实现</button>
+              </div>
             </div>
           </div>
         </div>
@@ -78,17 +96,17 @@ reactive.count++ // 触发更新</code></pre>
             <div class="code-block">
               <pre><code>function track(target, key) {
   if (!activeEffect) return
-  
+
   let depsMap = targetMap.get(target)
   if (!depsMap) {
     targetMap.set(target, (depsMap = new Map()))
   }
-  
+
   let dep = depsMap.get(key)
   if (!dep) {
     depsMap.set(key, (dep = new Set()))
   }
-  
+
   dep.add(activeEffect)
 }</code></pre>
             </div>
@@ -101,10 +119,10 @@ reactive.count++ // 触发更新</code></pre>
               <pre><code>function trigger(target, key) {
   const depsMap = targetMap.get(target)
   if (!depsMap) return
-  
+
   const dep = depsMap.get(key)
   if (!dep) return
-  
+
   dep.forEach(effect => {
     effect()
   })
@@ -135,9 +153,11 @@ reactive.count++ // 触发更新</code></pre>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { reactive as officialReactive, ref as officialRef, computed as officialComputed } from 'vue'
 import { reactive as myReactive, ref as myRef, computed as myComputed } from '@/my-vue/reactivity'
 
+const router = useRouter()
 const testResults = ref<Array<{
   id: number
   name: string
@@ -147,6 +167,10 @@ const testResults = ref<Array<{
 }>>([])
 
 let resultId = 0
+
+const goToImplementation = (api: string) => {
+  router.push(`/learning/reactivity/implementation/${api}`)
+}
 
 const addResult = (name: string, status: 'success' | 'error' | 'pending', description: string, error?: string) => {
   testResults.value.push({
@@ -163,16 +187,16 @@ const testOfficialReactive = () => {
     const original = { count: 0 }
     const observed = officialReactive(original)
     let calls = 0
-    
+
     // 模拟effect
     const effect = () => {
       calls++
       observed.count
     }
     effect()
-    
+
     observed.count++
-    
+
     addResult(
       '官方 reactive()',
       'success',
@@ -192,15 +216,15 @@ const testOfficialRef = () => {
   try {
     const count = officialRef(0)
     let calls = 0
-    
+
     const effect = () => {
       calls++
       count.value
     }
     effect()
-    
+
     count.value++
-    
+
     addResult(
       '官方 ref()',
       'success',
@@ -220,7 +244,7 @@ const testOfficialComputed = () => {
   try {
     const count = officialRef(0)
     const double = officialComputed(() => count.value * 2)
-    
+
     addResult(
       '官方 computed()',
       'success',
@@ -241,16 +265,16 @@ const testMyReactive = () => {
     const original = { count: 0 }
     const observed = myReactive(original)
     let calls = 0
-    
+
     // 模拟effect
     const effect = () => {
       calls++
       observed.count
     }
     effect()
-    
+
     observed.count++
-    
+
     addResult(
       '我的 reactive()',
       'success',
@@ -270,15 +294,15 @@ const testMyRef = () => {
   try {
     const count = myRef(0)
     let calls = 0
-    
+
     const effect = () => {
       calls++
       count.value
     }
     effect()
-    
+
     count.value++
-    
+
     addResult(
       '我的 ref()',
       'success',
@@ -298,7 +322,7 @@ const testMyComputed = () => {
   try {
     const count = myRef(0)
     const double = myComputed(() => count.value * 2)
-    
+
     addResult(
       '我的 computed()',
       'success',
@@ -415,6 +439,11 @@ const testMyComputed = () => {
   margin-bottom: 1rem;
 }
 
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .test-btn {
   background: #42b883;
   color: white;
@@ -435,6 +464,20 @@ const testMyComputed = () => {
 
 .test-btn.my:hover {
   background: #e55a5a;
+}
+
+.implement-btn {
+  background: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.implement-btn:hover {
+  background: #5f4dd0;
 }
 
 .principle-cards {
@@ -540,9 +583,10 @@ const testMyComputed = () => {
 }
 
 @media (max-width: 768px) {
+
   .api-comparison,
   .principle-cards {
     grid-template-columns: 1fr;
   }
 }
-</style> 
+</style>
