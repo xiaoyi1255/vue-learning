@@ -2,8 +2,8 @@
  * @Author: taijingming
  * @Date: 2025-06-28 14:28:05
  * @LastEditors: taijingming
- * @LastEditTime: 2025-06-28 15:00:34
- * @FilePath: \vue-test\vue-learning\src\router\index.ts
+ * @LastEditTime: 2025-06-29 20:04:39
+ * @FilePath: \vue-learning\src\router\index.ts
  * @Description:
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -57,6 +57,21 @@ const router = createRouter({
       path: '/learning/compiler',
       name: 'compiler',
       component: () => import('../views/learning/CompilerView.vue'),
+    },
+    {
+      path: '/screenshot-test',
+      name: 'screenshot-test',
+      component: () => import('../views/ScreenshotTestView.vue'),
+    },
+    {
+      path: '/style-showcase',
+      name: 'style-showcase',
+      component: () => import('../views/StyleShowcaseView.vue'),
+    },
+    {
+      path: '/html2canvas-home',
+      name: 'html2canvas-home',
+      component: () => import('../views/Html2canvasHomeView.vue'),
     },
   ],
 })
