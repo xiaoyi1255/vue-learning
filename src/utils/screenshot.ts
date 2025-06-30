@@ -171,3 +171,19 @@ export async function captureToBlob(
     throw new Error('截图失败')
   }
 }
+
+/**
+ * 截图到File对象
+ * @param element 要截图的DOM元素
+ * @param filename 文件名（可选，默认"screenshot.png"）
+ * @param options 截图选项
+ * @returns Promise<File> 返回File对象
+ */
+export async function captureToFile(
+  element: HTMLElement,
+  filename: string = 'screenshot.png',
+  options: ScreenshotOptions = {}
+): Promise<File> {
+  const blob = await captureToBlob(element, options)
+  return new File([blob], filename, { type: blob.type })
+}
