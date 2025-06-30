@@ -8,7 +8,7 @@
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
  */
-
+import { ITERATE_KEY } from './reactive'
 let activeEffect = null
 const effectStack = []
 const targetMap = new WeakMap()
@@ -76,20 +76,31 @@ export function track(target, key) {
   activeEffect.deps.push(deps)
 }
 
-export function trigger(target, key) {
+export function trigger(target, key, type) {
   const depsMap = targetMap.get(target)
   if (!depsMap) return
   const deps = depsMap.get(key)
   if (!deps) return
   // console.log('[trigger] deps', target, key, deps)
-  const set = new Set()
-  // 避免无限循环
+  const toRunDeps = new Set()
   deps.forEach((effect) => {
+    // 避免无限循环
     if (effect !== activeEffect) {
-      set.add(effect)
+      toRunDeps.add(effect)
     }
   })
-  set.forEach((effect) => {
+  // 处理 for in / Object.keys() 等迭代操作
+  if (type === 'ADD' || type === 'DELETE') {
+    const iterateDeps = depsMap.get(ITERATE_KEY)
+    iterateDeps && iterateDeps.forEach((effect) => {
+      // 避免无限循环
+      if (effect !== activeEffect) {
+        toRunDeps.add(effect)
+      }
+    })
+  }
+
+  toRunDeps.forEach((effect) => {
     if (effect.options.scheduler) {
       effect.options.scheduler(effect)
     } else {
