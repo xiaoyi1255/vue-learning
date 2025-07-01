@@ -2,7 +2,7 @@
  * @Author: taijingming
  * @Date: 2025-06-28 16:06:48
  * @LastEditors: 静ming
- * @LastEditTime: 2025-06-30 23:34:25
+ * @LastEditTime: 2025-07-01 08:16:06
  * @FilePath: \vue-learning\src\learning\reactivity\reactive.js
  * @Description:
  *
@@ -26,9 +26,13 @@ export function readonly(target) {
   return createReactive(target, false, true)
 }
 
+export function shallowReadonly(target) {
+  return createReactive(target, true, true)
+}
+
 /** * 创建响应式对象
  * @param {Object} target - 目标对象
- * @param {boolean} isReadonly - 是否只读 
+ * @param {boolean} isReadonly - 是否只读
  * @param {boolean} isShallow - 是否浅响应
  * @returns {Proxy} - 响应式对象
  */
@@ -48,7 +52,7 @@ function createReactive(target, isShallow = false, isReadonly = false, ) {
         // 浅层响应式，直接返回值
         return res
       }
-      // 如果获取的值是对象，递归创建响应式 
+      // 如果获取的值是对象，递归创建响应式
       if (typeof res === 'object' && res !== null) {
         return isReadonly ? isReadonly(res) : createReactive(res)
       }
@@ -77,7 +81,7 @@ function createReactive(target, isShallow = false, isReadonly = false, ) {
       if (isReadonly) {
         console.warn(`Cannot delete property ${key} of readonly object`)
         return true // 只读对象不允许删除属性，返回true表示操作成功
-        
+
       }
       const res = Reflect.deleteProperty(target, key)
       // 触发依赖更新
